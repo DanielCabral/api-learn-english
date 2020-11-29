@@ -1,7 +1,7 @@
 
 exports.up = function(knex) {
     return knex.schema.createTable('users',function(table){
-        table.increments('id').primary;
+        table.increments('id').primary();
         table.string('name').notNullable();
         table.string('phone').notNullable();
         table.string('email').notNullable();
@@ -11,7 +11,7 @@ exports.up = function(knex) {
         table.integer('status').notNullable();
         table.integer('type').notNullable();        
         table.timestamp("created_at").defaultTo(knex.fn.now());
-        table.timestamp("updated_at").defaultTo(knex.fn.now());
+        table.timestamp("updated_at");
     });
 };
 

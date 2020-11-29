@@ -9,16 +9,6 @@ router.get('/', (req,res) => {
     res.send('OK');
 });
 
-//Rotas de Projeto
-router.get('/projects', ProjectsController.index);
-
-router.post('/project',ProjectsController.create);
-
-router.put('/project', ProjectsController.update);
-
-router.delete('/project/:id', ProjectsController.delete);
-
-router.get('/project/:id', ProjectsController.get);
 
 //----------------------------------------------------
 //Rotas de usuario 
