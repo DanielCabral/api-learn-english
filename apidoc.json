@@ -1,7 +1,7 @@
 {
     "name": "LearnEnglish",
     "version": "1.0.0",
-    "description": "LearnEnglish",
+    "description": "Api de acesso as rotas do sistema LearnEnglish",
     "title": "LearnEnglish API",
-    "url" : "http://v1"
+    "url" : "https://api-learnenglish.herokuapp.com"
   }
