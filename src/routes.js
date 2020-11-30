@@ -5,9 +5,7 @@ const UsersController=require('./controllers/UsersControllers');
 var router = express.Router();
 router.use(express.json());
 
-router.get('/', (req,res) => {
-    res.send('OK');
-});
+router.use('/',express.static('apidoc'))
 
 
 //----------------------------------------------------

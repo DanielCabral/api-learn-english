@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "nodemon",
     "test": "jest",
+    "start": "node src/index.js",
     "knex": "knex"
   },
   "dependencies": {
