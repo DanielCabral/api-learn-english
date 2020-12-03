@@ -4,9 +4,8 @@ const crypto=require('crypto');
 
 module.exports={
     async index (request,response) {
-         const users=await connection('users')
+         const users = await connection('users')
          .select(['users.*']);
-
         return response.json(users);
     },
 
@@ -57,11 +56,16 @@ module.exports={
 
 
     async create(request,response){
-        const {name, email, senha}=request.body;
+        const {name, phone, email, password }=request.body;
             const [id]= await connection('users').insert({
                 name,
+                phone,
                 email,               
-                senha, 
+                password,
+                image: '',
+                token: '',
+                status: 0,
+                type: 0,
             });
             return response.send(""+id);
     },
