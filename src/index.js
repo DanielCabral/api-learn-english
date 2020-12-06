@@ -1,4 +1,7 @@
-const express=require('express');
+const aws = require('aws-sdk');
+const express = require('express');
+const multer = require('multer');
+const multerS3 = require('multer-s3');
 const routes=require('./routes.js');
 const cors=require('cors');
 
@@ -12,6 +15,27 @@ app.use((req, res, next) => {
     app.use(cors());
     next();
 });
+
+const spacesEndpoint = new aws.Endpoint('sfo2.digitaloceanspaces.com');
+aws.config.update({ region: 'sfo2' });
+const s3 = new aws.S3({
+  accessKeyId: process.env.aws_access_key_id,
+  secretAccessKey: process.env.aws_secret_access_key,
+  region: process.env.region,
+  endpoint: `https://sfo2.digitaloceanspaces.com/`
+})
+console.log(process.env.region)
+const upload = multer({
+  storage: multerS3({
+    s3: s3,
+    bucket: 'https://learnenglish.sfo2.digitaloceanspaces.com/',
+    acl: 'public-read',
+    key: function (request, file, cb) {
+      console.log(file);
+      cb(null, file.originalname);
+    }
+  })
+}).array('upload', 1);
 
 /*
 var fs = require('fs');
@@ -63,5 +87,16 @@ app.use(cors());
 
 app.use(express.json());
 app.use(routes);
+
+app.post('/upload', function (request, response, next) {
+  upload(request, response, function (error) {
+    if (error) {
+      console.log(error);
+      return response.redirect("/error");
+    }
+    console.log('File uploaded successfully.');
+    response.redirect("/success");
+  });
+});
 const port = process.env.PORT || 3333;
 app.listen(port);

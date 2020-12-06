@@ -1,9 +1,15 @@
 const connection=require('../../database/connection');
 const crypto=require('crypto');
-
+require("dotenv-safe").config();
+var jwt = require('jsonwebtoken');
 
 module.exports={
     async index (request,response) {
+        //console.log(process.env.SECRET)
+        /*var token = jwt.sign({ id: 1
+         }, process.env.SECRET, {
+            expiresIn: 300 // expires in 5min
+          });*/
          const users = await connection('users')
          .select(['users.*']);
         return response.json(users);
@@ -49,9 +55,20 @@ module.exports={
         const {id}=request.params;
         const user=await connection('users')
         .where({'id': id})
-        .select(['users.*']);
-
-       return response.json(user);
+        .select(['users.*'])
+        .then((result) =>{
+            if(result.length > 0){
+                return response.json(result);
+            }else{
+                response.status(404).send({
+                    "error": "UserNotFound"
+                  })
+            }
+           
+        })
+        .catch((err) => response.sendStatus(500).send({
+                   "error": "UserNotFound"
+                 }));
    },
 
 
@@ -90,6 +107,7 @@ module.exports={
  *     HTTP/1.1 200 OK
  *
  */
+
     async update(request,response){
         const {name, email}=request.body;
         console.log(id);
@@ -108,5 +126,43 @@ module.exports={
                 return response.send("Erro");
                 return;         
             });           
+    },
+
+    async uploadImage(request,response){
+        const {id} = request.params;
+        console.log(id)
+        const user=await connection('users')
+        .where({'id': id})
+        .select(['users.*'])
+        .then((result) =>{
+            console.log(result.length);
+            if(result.length > 0){
+                console.log('ok');
+                const { originalname: name, size, key, url = "", path } = request.file;
+                console.log(request.file);
+                connection('users').where({'id': id})
+                .update({
+                    image: 'http://192.168.1.9:3333/files/'+key,
+                })
+                .then(function(numberOfUpdatedRows) {
+                    if(numberOfUpdatedRows) {                   
+                        return response.send("Ok ");
+                    }
+                }).catch(function(err){
+                    console.log(err);
+                    return response.send("Erro");         
+                });
+            }else{
+                response.status(404).send({
+                    "error": "UserNotFound"
+                  })
+            }
+           
+        })
+        .catch((err) => {response.status(500).send({
+                   "error": "UserNotFound"
+        }); console.log(err)});
+        
+       
     },
 };
