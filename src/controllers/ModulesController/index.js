@@ -11,54 +11,61 @@ module.exports={
     },
     async get (request,response) {
         const {id}=request.params;
-        const ongs=await connection('projects')
+        const modules=await connection('modules')
         .where({'id': id})
-        .select(['projects.*']);
+        .select(['modules.*']);
 
-       return response.json(ongs);
+       return response.json(modules);
    },
     async create(request,response){
-        const {name, xml}=request.body;
-        console.log("Enter");
-            // const ong_id=request.headers.authorization;
-            // console.log(ong_id);
-            const [id]= await connection('projects').insert({
-                name,
-                xml,                
+        const {title, description, level, image, id_user} = request.body;
+            const [id]= await connection('modules').insert({
+                title, 
+                description, 
+                level, 
+                image, 
+                user_id: id_user               
             });
-            return response.send(""+id);
+            return response.send(
+                {
+                    id: id,
+                }
+            );
     },
     async update(request,response){
-        const {xml, id}=request.body;
-        console.log(id);
-
-            await connection('projects').where({'id': id})
+        const {title, description, level, image, id_user} = request.body;
+        const {id}=request.params;
+        
+            await connection('modules').where({'id': id})
             .update({
-                xml: xml
+                title, 
+                description, 
+                level, 
+                image, 
+                user_id: id_user  
             })
             .then(function(numberOfUpdatedRows) {
                 if(numberOfUpdatedRows) {                   
-                    return response.send("Ok ");
+                    return response.sendStatus(200);
                 }
             }).catch(function(err){
                 console.log(err);
-                return response.send("Erro");
+                return response.sendStatus(400);
                 return;         
             });             
     },
     async delete(request,response){
         const {id}=request.params;
-        console.log(id);
 
-            await connection('projects').where({'id': id})
+            await connection('modules').where({'id': id})
             .del()
             .then(function(numberOfUpdatedRows) {
                 if(numberOfUpdatedRows) {                   
-                    return response.send("Ok ");
+                    return response.sendStatus(200);
                 }
             }).catch(function(err){
                 console.log(err);
-                return response.send("Erro"+id);     
+                return response.sendStatus(400);     
             });             
     },
 };

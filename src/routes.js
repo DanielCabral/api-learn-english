@@ -7,7 +7,9 @@ const multer = require('multer');
 const ProjectsController=require('./controllers/ProjectsController');
 const UsersController=require('./controllers/UsersControllers');
 const ModulesController=require('./controllers/ModulesController');
+const LessonsController=require('./controllers/LessonsControlers')
 const multerConfig = require('./config/multer')
+const multerConfigVideo = require('./config/multerVideo')
 
 var router = express.Router();
 router.use(express.json());
@@ -16,6 +18,7 @@ router.use(morgan("tiny"))
 
 router.use('/',express.static('apidoc'))
 router.use('/files',express.static('tmp/uploads'))
+router.use('/videos',express.static('output'))
 
 //router.use(verifyJWT());;
 
@@ -52,13 +55,27 @@ router.get('/user/:id', UsersController.get);
 //Rotas de modulos 
 router.get('/modules', ModulesController.index);
 
-router.post('/modules', ModulesControllers.create);
+router.post('/modules', ModulesController.create);
 
-router.put('/module', ModulesControllers.update);
+router.put('/module/:id', ModulesController.update);
 
-router.patch('/imagemodule/:id', multer(multerConfig).single('file'), ModulesController.uploadImage);
+///router.patch('/imagemodule/:id', multer(multerConfig).single('file'), ModulesController.uploadImage);
 
 router.get('/module/:id', ModulesController.get);
 
+
+//----------------------------------------------------
+//Rotas de lições 
+router.get('/lessons', LessonsController.index);
+
+router.post('/lessons', LessonsController.create);
+
+router.put('/lesson/:id', LessonsController.update);
+
+router.patch('/lesson/:id', multer(multerConfigVideo).single('file'), LessonsController.uploadImage);
+
+router.get('/lesson/:id', LessonsController.get);
+
+router.delete('/lesson/:id', LessonsController.delete);
 
 module.exports = router;
