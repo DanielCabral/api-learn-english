@@ -71,7 +71,7 @@ router.post('/lessons', LessonsController.create);
 
 router.put('/lesson/:id', LessonsController.update);
 
-router.patch('/lesson/:id', multer(multerConfigVideo).single('file'), UsersController.uploadImage);
+router.patch('/lesson/:id', multer(multerConfigVideo).single('file'), LessonsController.uploadImage);
 
 router.get('/lesson/:id', LessonsController.get);
 
