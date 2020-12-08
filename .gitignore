@@ -1,5 +1,4 @@
 node_modules
 credentials
-knexfile.js
 ./.env
 ./tmp
