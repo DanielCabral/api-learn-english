@@ -161,8 +161,25 @@ module.exports={
         })
         .catch((err) => {response.status(500).send({
                    "error": "UserNotFound"
-        }); console.log(err)});
-        
-       
+        }); console.log(err)});               
     },
+    async login (request,response) {
+        const {email, password} = request.body;
+        console.log(email,password)
+        const user=await connection('users')
+        .where({'email': email, 'password': password})        
+        .select(['users.*'])
+        .then((result) =>{
+            if(result.length > 0){
+                return response.json(result[0]);
+            }else{
+                response.status(404).send({
+                    "error": "UserNotFound"
+                  })
+            }
+           
+        })     
+   },
+
+
 };
