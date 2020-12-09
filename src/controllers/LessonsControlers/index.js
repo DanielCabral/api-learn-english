@@ -180,7 +180,7 @@ const converterVideo = function(filename, path){
             .on('end', function (err, stdout, stderr) {
                 console.log('Finished processing!' , err, stdout, stderr)
                 if (err) reject(err);
-                return resolve('http://192.168.1.9:3333/videos/'+filename+'.m3u8');
+                return resolve('http://192.168.1.9:3333/videos/'+path+'/'+filename+'.m3u8');
                 //return 'http://192.168.1.9:3333/videos/'+filename+'.m3u8';
             })
             .run()
