@@ -21,7 +21,7 @@ module.exports={
     async get (request,response) {
         const {id}=request.params;
         const lessons=await connection('lessons')
-        .where({'id': id})
+        .where({'id_module': id})
         .select(['lessons.*']);
 
        return response.json(lessons);

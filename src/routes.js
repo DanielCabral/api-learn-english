@@ -46,7 +46,7 @@ router.put('/user', UsersController.update);
 router.patch('/image/:id', multer(multerConfig).single('file'), UsersController.uploadImage);
 
 router.get('/user/:id', UsersController.get);
-router.get('/auth', UsersController.login)
+router.post('/auth', UsersController.login)
 
 //router.get('/login/', ProjectsController.auth);
 

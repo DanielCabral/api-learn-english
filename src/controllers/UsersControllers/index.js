@@ -165,7 +165,7 @@ module.exports={
     },
     async login (request,response) {
         const {email, password} = request.body;
-        console.log(email,password)
+        console.log(request.body)
         const user=await connection('users')
         .where({'email': email, 'password': password})        
         .select(['users.*'])
