@@ -77,6 +77,8 @@ router.patch('/lesson/:id', multer(multerConfigVideo).single('file'), LessonsCon
 
 router.get('/lesson/:id', LessonsController.get);
 
+router.get('/searchlesson/:search', LessonsController.search);
+
 router.delete('/lesson/:id', LessonsController.delete);
 
 module.exports = router;

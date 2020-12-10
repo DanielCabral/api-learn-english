@@ -26,6 +26,14 @@ module.exports={
 
        return response.json(lessons);
    },
+   async search (request,response) {
+    const {search}=request.params;
+    const lessons=await connection('lessons')
+    .where('title','rlike',search)
+    .select(['lessons.*']);
+
+   return response.json(lessons);
+},
     async create(request,response){
         const {title, description,link, id_module, thumbnail, id_user} = request.body;
             const [id]= await connection('lessons').insert({
