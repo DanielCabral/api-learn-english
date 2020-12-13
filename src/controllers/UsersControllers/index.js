@@ -2,14 +2,10 @@ const connection=require('../../database/connection');
 const crypto=require('crypto');
 require("dotenv-safe").config();
 var jwt = require('jsonwebtoken');
+const mailer = require('../../modules/mailer');
 
 module.exports={
-    async index (request,response) {
-        //console.log(process.env.SECRET)
-        /*var token = jwt.sign({ id: 1
-         }, process.env.SECRET, {
-            expiresIn: 300 // expires in 5min
-          });*/
+    async index (request,response) {       
          const users = await connection('users')
          .select(['users.*']);
         return response.json(users);
@@ -170,7 +166,7 @@ module.exports={
         .where({'email': email, 'password': password})        
         .select(['users.*'])
         .then((result) =>{
-            if(result.length > 0){
+            if(result.length > 0){                
                 return response.json(result[0]);
             }else{
                 response.status(404).send({
@@ -180,6 +176,86 @@ module.exports={
            
         })     
    },
+   async forgotpassword (request,response) {
+    const {email} = request.body;
+    console.log(request.body)
+    const user=await connection('users')
+    .where({'email': email})        
+    .select(['users.*'])
+    .then((result) =>{
+        if(result.length > 0){
+            const token = crypto.randomBytes(3).toString('hex');
 
+                const now = new Date();
+                console.log(now)
+                now.setHours(now.getHours()+1);
+            connection('users').where({'id': result[0].id})
+                .update({
+                    passwordResetToken: token,
+                    passwordResetExpires: now,
+                })
+                .then(function(numberOfUpdatedRows) {                    
+                    if(numberOfUpdatedRows) {                   
+                        mailer.sendMail({
+                            to: email, 
+                            from: 'danielcsouza97@gmail.com',
+                            template: 'auth/forgot.password',
+                            context: {token}
+                        }, (err) => {
+                            console.log(err)
+                            if(err){
+                                return response.send("Erro no envio do email");
+                            }
+                            return response.send("Ok");
+                        })
+                        
+                    }
+                }).catch(function(err){
+                    console.log(err);
+                    return response.send("Erro");         
+                });            
+        }else{
+            response.status(404).send({
+                "error": "UserNotFound"
+              })
+        }
+       
+    })     
+},
+async resetpassword (request,response) {
+    const {email, token, password} = request.body;
+    console.log(request.body)
+    const user=await connection('users')
+    .where({'email': email})        
+    .select(['users.*'])
+    .then((result) =>{
+        if(result.length > 0){
+            console.log(result[0].passwordResetToken)
+            if(token !== result[0].passwordResetToken){
+            response.status(400).send({
+                "error": "Token wrong"
+              })
+            return;
+            }            
+            connection('users').where({'id': result[0].id})
+                .update({
+                    password: password, 
+                    passwordResetToken: crypto.randomBytes(3).toString('hex'),                   
+                })
+                .then(function(numberOfUpdatedRows) {                    
+                    if(numberOfUpdatedRows) {                                           
+                        response.send();
+                    }
+                }).catch(function(err){
+                    console.log(err);
+                    return response.send("Erro");         
+                });            
+        }else{
+            response.status(404).send({
+                "error": "UserNotFound"
+              })
+        }
+    })
+},
 
 };

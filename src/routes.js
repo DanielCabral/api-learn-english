@@ -47,6 +47,8 @@ router.patch('/image/:id', multer(multerConfig).single('file'), UsersController.
 
 router.get('/user/:id', UsersController.get);
 router.post('/auth', UsersController.login)
+router.post('/forgotpassword', UsersController.forgotpassword)
+router.post('/resetpassword', UsersController.resetpassword)
 
 //router.get('/login/', ProjectsController.auth);
 
