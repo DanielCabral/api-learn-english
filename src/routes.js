@@ -66,6 +66,7 @@ router.put('/module/:id', ModulesController.update);
 
 router.get('/module/:id', ModulesController.get);
 
+router.delete('/module/:id', ModulesController.delete);
 
 //----------------------------------------------------
 //Rotas de lições 

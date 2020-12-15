@@ -75,7 +75,7 @@ module.exports={
                 phone,
                 email,               
                 password,
-                image: '',
+                image: 'https://meet.google.com/linkredirect?authuser=0&dest=https%3A%2F%2Fw7.pngwing.com%2Fpngs%2F2%2F604%2Fpng-transparent-computer-icons-silhouette-user-profile-silhouette-animals-silhouette-fen.png',
                 token: '',
                 status: 0,
                 type: 0,
